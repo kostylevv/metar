@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 For more information, please email arimus@users.sourceforge.net
 */
-package parser;
+package com.kostylevv.android.metar.parser;
 
 
 /**

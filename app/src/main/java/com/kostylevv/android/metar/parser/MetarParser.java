@@ -18,7 +18,7 @@
 
  For more information, please email arimus@users.sourceforge.net
  */
-package parser;
+package com.kostylevv.android.metar.parser;
 
 import org.apache.oro.text.perl.MalformedPerl5PatternException;
 import org.apache.oro.text.perl.Perl5Util;

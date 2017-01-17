@@ -1,8 +1,8 @@
 package com.kostylevv.android.metar;
 
+import com.kostylevv.android.metar.parser.Metar;
+import com.kostylevv.android.metar.parser.MetarParser;
 import org.junit.Test;
-import parser.Metar;
-import parser.MetarParser;
 
 import static org.junit.Assert.assertEquals;
 
@@ -31,4 +31,8 @@ public class ExampleUnitTest {
         metar = MetarParser.parseReport("ULLI 171130Z 19002MPS 160V230 9999 OVC022 M04/M06 Q1031 R88/550348 NOSIG 17-01-17");
         assertEquals((long)metar.getWindDirection(), (long) 190);
     }
+
+
+
+
 }

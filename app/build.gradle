@@ -16,6 +16,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "ICAO_API_KEY", "\"" + getApiKey() + "\""
+        }
     }
 }
 
@@ -31,4 +35,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'oro:oro:2.0.8'
     testCompile 'junit:junit:4.12'
+}
+
+def getApiKey() {
+    def Properties props = new Properties()
+    props.load(new FileInputStream(new File('secret.props')))
+    return props['ICAO_API_KEY']
 }
