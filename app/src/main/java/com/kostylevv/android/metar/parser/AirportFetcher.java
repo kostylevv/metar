@@ -3,6 +3,7 @@ package com.kostylevv.android.metar.parser;
 import android.net.Uri;
 import android.util.Log;
 import com.kostylevv.android.metar.BuildConfig;
+import com.kostylevv.android.metar.model.Airport;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -12,13 +13,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vkostylev on 20/01/17.
  */
 public class AirportFetcher {
 
-    public static String[] fetch() {
+    public static List<Airport> fetch() {
 
         HttpURLConnection urlConnection = null;
 
@@ -26,7 +29,7 @@ public class AirportFetcher {
 
         String airportJsonString = null;
 
-        String[] result = null;
+        List<Airport> result = null;
 
         try {
             //Base URL for MEtAR providers ICAO API
@@ -77,7 +80,7 @@ public class AirportFetcher {
 
             airportJsonString = buffer.toString();
 
-            result = getSimpleAirportsListFromJson(airportJsonString);
+            result = getAirportsListFromJson(airportJsonString);
 
         } catch (IOException e) {
             Log.v("METAR", e.getMessage());
@@ -125,6 +128,45 @@ public class AirportFetcher {
         for (int i = 0; i < airportArray.length(); i++) {
             String airport = airportArray.getJSONObject(i).getString("airportCode");
             result[i] = airport;
+        }
+
+
+        return result;
+    }
+
+    public static List<Airport> getAirportsListFromJson(String airportsJson)
+            throws JSONException {
+
+        /**
+         * {
+         "latitude": 30.218777777777778,
+         "longitude": -81.87716666666665,
+         "airportCode": "KVQQ",
+         "airportName": "CECIL",
+         "countryCode": "USA",
+         "is_international": false,
+         "countryName": "United States of America"
+         },
+         */
+
+
+        JSONArray airportArray = new JSONArray(airportsJson);
+
+        List<Airport> result = new ArrayList<Airport>();
+
+
+        for (int i = 0; i < airportArray.length(); i++) {
+            String code = airportArray.getJSONObject(i).getString("airportCode");
+            String name = airportArray.getJSONObject(i).getString("airportName");
+            String countryCode = airportArray.getJSONObject(i).getString("countryCode");
+            String latitude = airportArray.getJSONObject(i).getString("latitude");
+            String longitude = airportArray.getJSONObject(i).getString("longitude");
+            String countryName = airportArray.getJSONObject(i).getString("countryName");
+            String isInternational = airportArray.getJSONObject(i).getString("is_international");
+
+            Airport airport = new Airport(latitude, longitude, code, name ,countryName, countryCode, isInternational);
+
+            result.add(airport);
         }
 
 

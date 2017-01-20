@@ -10,10 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.kostylevv.android.metar.model.Airport;
 import com.kostylevv.android.metar.parser.AirportFetcher;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
-        implements AirportAdapter.AirportAdapterOnClickHandler, LoaderManager.LoaderCallbacks<String[]> {
+        implements AirportAdapterV2.AirportAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Airport>> {
 
     /**
      * 19/01 COMPLETED add RecyclerView
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
-    private AirportAdapter mAirportAdapter;
+    private AirportAdapterV2 mAirportAdapter;
 
     private TextView mErrorMessageDisplay;
 
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         //content size is consistent
         mRecyclerView.setHasFixedSize(true);
 
-        mAirportAdapter = new AirportAdapter(this);
+        mAirportAdapter = new AirportAdapterV2(this);
 
         mRecyclerView.setAdapter(mAirportAdapter);
 
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
         int loaderId = AIRPORT_LOADER_ID;
 
-        LoaderManager.LoaderCallbacks<String[]> callback = MainActivity.this;
+        LoaderManager.LoaderCallbacks<List<Airport>> callback = MainActivity.this;
 
         Bundle bundleForLoader = null;
 
@@ -68,10 +71,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public Loader<String[]> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<String[]>(this) {
+    public Loader<List<Airport>> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<List<Airport>>(this) {
 
-            String[] mAirportData = null;
+            List<Airport> mAirportData = null;
 
             @Override
             protected void onStartLoading() {
@@ -84,10 +87,10 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public String[] loadInBackground() {
+            public List<Airport> loadInBackground() {
 
                 try {
-                    String[] result = AirportFetcher.fetch();
+                    List<Airport> result = AirportFetcher.fetch();
                     return result;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -100,15 +103,16 @@ public class MainActivity extends AppCompatActivity
              *
              * @param data The result of the load
              */
-            public void deliverResult(String[] data) {
+            public void deliverResult(List<Airport> data) {
                 mAirportData = data;
                 super.deliverResult(data);
             }
         };
     }
 
+
     @Override
-    public void onLoadFinished(Loader<String[]> loader, String[] data) {
+    public void onLoadFinished(Loader<List<Airport>> loader, List<Airport> data) {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mAirportAdapter.setAirportData(data);
         if (null == data) {
@@ -119,14 +123,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoaderReset(Loader<String[]> loader) {
+    public void onLoaderReset(Loader<List<Airport>> loader) {
 
     }
 
-    @Override
-    public void onClick(String weatherForDay) {
-
-    }
 
     private void showAirportsDataView() {
         /* First, make sure the error is invisible */
@@ -140,5 +140,10 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(Airport airport) {
+
     }
 }
