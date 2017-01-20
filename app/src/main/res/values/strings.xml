@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">METAR</string>
+    <string name="error_msg">An error occured</string>
 </resources>
